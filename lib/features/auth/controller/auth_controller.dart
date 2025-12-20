@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sayara_hub_app/routes/app_routes.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController();
@@ -53,7 +54,7 @@ class AuthController extends GetxController {
 
     Get.snackbar('Success', 'Login successful!',
         snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green.withOpacity(0.9), colorText: Colors.white);
-
+    Get.offAllNamed(AppRoutes.home);
   }
 
   void loginWithGoogle() {

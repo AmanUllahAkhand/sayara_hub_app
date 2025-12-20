@@ -1,12 +1,387 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:sayara_hub_app/core/constants/app_colors.dart';
+import 'package:sayara_hub_app/core/widgets/custom_text_view.dart';
+import '../../../core/constants/app_svgs.dart';
+import '../controller/home_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Home Screen')),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          children: [
+            SvgPicture.asset(
+              AppSvgs.carIcon,
+              width: 37,
+              height: 37,
+            ),
+            const SizedBox(width: 8),
+            CustomTextView(
+              text: 'SayaraHub',
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+            )
+          ],
+        ),
+        actions: [
+          CircleAvatar(
+            backgroundColor: Colors.grey.shade200,
+            child: const Icon(Icons.person, color: Colors.grey),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. Find Car Services Near You
+            _buildFindServicesSection(),
+
+            const SizedBox(height: 24),
+
+            // 2. Emergency Service
+            _buildEmergencySection(),
+
+            const SizedBox(height: 24),
+
+            // 3. Popular Services
+            _buildPopularServicesSection(),
+
+            const SizedBox(height: 24),
+
+            // 4. Top Rated Garages
+            _buildTopGaragesSection(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        currentIndex: 0,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notification'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+
+  // 1. Find Car Services Near You
+  Widget _buildFindServicesSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.homeprimary,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextView(
+            text: 'Find Car Services Near You',
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: AppColors.scaffoldBackground,
+          ),
+          const SizedBox(height: 6),
+          CustomTextView(
+            text: 'Emergency repairs, maintenance & more',
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: AppColors.scaffoldBackground,
+          ),
+          const SizedBox(height: 20),
+
+          // Search Fields + Button Container
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            decoration: BoxDecoration(
+              color: AppColors.scaffoldBackground,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: _dropdownField('Location')),
+                    const SizedBox(width: 7),
+                    Expanded(child: _dropdownField('Service type')),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle search action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.homeprimary,
+                      foregroundColor: AppColors.scaffoldBackground,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      'Search garage',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          // Auto-scrolling Brand Logos with white rounded container
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: AppColors.scaffoldBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SizedBox(
+              height: 60,
+              child: PageView.builder(
+                controller: controller.brandPageController,
+                itemCount: null, // Infinite
+                physics: const NeverScrollableScrollPhysics(), // Disable manual scroll for pure auto
+                itemBuilder: (context, index) {
+                  final logoIndex = index % controller.brandLogos.length;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Image.asset(
+                      controller.brandLogos[logoIndex],
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dropdownField(String hint) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: AppColors.divider,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+      child:
+      CustomTextView(
+          text: hint,
+          fontSize: 13,
+          fontWeight: FontWeight.w400,
+        color: AppColors.textSecondary,)
+          ),
+          Icon(
+            Icons.keyboard_arrow_down,
+            color: AppColors.textSecondary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 2. Emergency Service
+  Widget _buildEmergencySection() {
+    return GestureDetector(
+      onTap: controller.onEmergencyTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.red.shade200),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 36),
+            const SizedBox(width: 16),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Emergency Service',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red)),
+                  Text('24/7 Available', style: TextStyle(color: Colors.red)),
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: controller.onEmergencyTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+              child: const Text('Search Now', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 3. Popular Services
+  Widget _buildPopularServicesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Popular Services',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 2.2, // Adjusted for horizontal layout (wider than tall)
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+          ),
+          itemCount: controller.popularServices.length,
+          itemBuilder: (context, index) {
+            final service = controller.popularServices[index];
+            return GestureDetector(
+              onTap: () => controller.onPopularServiceTap(service.title),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      service.imagePath,
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        service.title,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // 4. Top Rated Garages
+  Widget _buildTopGaragesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Top Rated Garages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: Colors.blue))),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: controller.topGarages.length,
+          itemBuilder: (context, index) {
+            final garage = controller.topGarages[index];
+            return GestureDetector(
+              onTap: () => controller.onGarageTap(garage.name),
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(color: Colors.grey.shade200, blurRadius: 10, offset: const Offset(0, 4))
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(garage.imagePath, width: 80, height: 80, fit: BoxFit.cover),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(garage.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              const Icon(Icons.star, color: Colors.amber, size: 16),
+                              Text(' ${garage.rating} (${garage.reviewCount})',
+                                  style: const TextStyle(fontSize: 12)),
+                              Text(' • ${garage.distance} km', style: TextStyle(color: Colors.grey.shade600)),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(Icons.circle, color: garage.isOpen ? Colors.green : Colors.red, size: 10),
+                              const SizedBox(width: 4),
+                              Text(garage.isOpen ? 'Open' : 'Closed',
+                                  style: TextStyle(color: garage.isOpen ? Colors.green : Colors.red)),
+                            ],
+                          ),
+                          Text(garage.services, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.more_vert, color: Colors.grey),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }
