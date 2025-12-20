@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 
 class CustomTextView extends StatelessWidget {
   final String text;
@@ -13,6 +14,7 @@ class CustomTextView extends StatelessWidget {
   final String? fontFamily;
   final FontStyle? fontStyle;
   final TextDecoration? decoration;
+  final Color? decorationColor;
 
 
   const CustomTextView({
@@ -28,6 +30,7 @@ class CustomTextView extends StatelessWidget {
     this.fontFamily = 'Poppins',
     this.fontStyle  = FontStyle.normal,
     this.decoration  = TextDecoration.none,
+    this.decorationColor  = AppColors.blackFont,
 
   });
 
@@ -38,6 +41,7 @@ class CustomTextView extends StatelessWidget {
       text,
       style: TextStyle(
         decoration: decoration,
+        decorationColor: decorationColor,
         color: color,
         fontSize: fontSize,
         fontWeight: fontWeight,
@@ -49,4 +53,3 @@ class CustomTextView extends StatelessWidget {
     );
   }
 }
-
