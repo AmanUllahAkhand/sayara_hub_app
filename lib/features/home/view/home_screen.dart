@@ -268,17 +268,18 @@ class HomeScreen extends GetView<HomeController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Popular Services',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        CustomTextView(
+          text: 'Popular Services',
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 15),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 2.2, // Adjusted for horizontal layout (wider than tall)
+            childAspectRatio: 2.2,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
           ),
@@ -290,9 +291,9 @@ class HomeScreen extends GetView<HomeController> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
+                  color: AppColors.scaffoldBackground,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color:AppColors.divider,),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -304,12 +305,10 @@ class HomeScreen extends GetView<HomeController> {
                     ),
                     const SizedBox(width: 5),
                     Expanded(
-                      child: Text(
-                        service.title,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: CustomTextView(
+                        text: service.title,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
@@ -332,8 +331,19 @@ class HomeScreen extends GetView<HomeController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Top Rated Garages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: Colors.blue))),
+            CustomTextView(
+              text: 'Top Rated Garages',
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+            TextButton(onPressed: () {},
+                child: CustomTextView(
+                  text: 'View All',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: AppColors.link,
+                ),
+            ),
           ],
         ),
         const SizedBox(height: 12),
