@@ -215,33 +215,47 @@ class HomeScreen extends GetView<HomeController> {
     return GestureDetector(
       onTap: controller.onEmergencyTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.red.shade50,
+          color: AppColors.warning,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.red.shade200),
         ),
         child: Row(
           children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 36),
-            const SizedBox(width: 16),
+            const Icon(Icons.warning, color: Colors.white, size: 25),
+            const SizedBox(width: 10),
             const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Emergency Service',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red)),
-                  Text('24/7 Available', style: TextStyle(color: Colors.red)),
+                  CustomTextView(
+                    text:'Emergency Service',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.scaffoldBackground,
+                  ),
+                  CustomTextView(
+                    text:'24/7 Available',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.scaffoldBackground,
+                  ),
                 ],
               ),
             ),
             ElevatedButton(
               onPressed: controller.onEmergencyTap,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                backgroundColor: AppColors.scaffoldBackground,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: const Text('Search Now', style: TextStyle(color: Colors.white)),
+              child: CustomTextView(
+                text:'Search Now',
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: AppColors.warning,
+              ),
             ),
           ],
         ),

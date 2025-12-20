@@ -17,6 +17,7 @@ class AppColors {
   static const Color link = Color(0xFF3B5BDB);
   static const Color blackFont = Color(0xFF000000);
   static const Color hintText = Color(0xFF6B6B6B);
+  static const Color warning = Color(0xFFDC2626);
 
   /// TextField fillColor
   static const Color alpineWhite = Color(0xFFE9EEFB);
