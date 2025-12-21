@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../features/auth/binding/auth_binding.dart';
+import '../features/common/view/main_tab_screen.dart';
 import '../features/home/binding/home_binding.dart';
 import '../features/splash/view/splash_screen.dart';
 import '../features/splash/binding/splash_binding.dart';
@@ -22,7 +23,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      page: () => const MainTabScreen(),
       binding: HomeBinding(),
     ),
   ];
