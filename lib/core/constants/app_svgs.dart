@@ -15,4 +15,10 @@ class AppSvgs {
   static const String battery = 'assets/images/svg/battery.svg';
   static const String spares = 'assets/images/svg/spares.svg';
   static const String electrical = 'assets/images/svg/elec.svg';
+
+  //Notification:
+  static const String booking = 'assets/images/svg/booking.svg';
+  static const String newFeature = 'assets/images/svg/newFeature.svg';
+  static const String reminder = 'assets/images/svg/reminder.svg';
+  static const String delete = 'assets/images/svg/delete.svg';
 }
