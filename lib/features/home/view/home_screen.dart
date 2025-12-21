@@ -12,6 +12,7 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -45,19 +46,13 @@ class HomeScreen extends GetView<HomeController> {
           children: [
             // 1. Find Car Services Near You
             _buildFindServicesSection(),
-
             const SizedBox(height: 24),
-
             // 2. Emergency Service
             _buildEmergencySection(),
-
             const SizedBox(height: 24),
-
             // 3. Popular Services
             _buildPopularServicesSection(),
-
             const SizedBox(height: 24),
-
             // 4. Top Rated Garages
             _buildTopGaragesSection(),
           ],
@@ -148,20 +143,23 @@ class HomeScreen extends GetView<HomeController> {
             ),
             child: SizedBox(
               height: 60,
-              child: PageView.builder(
-                controller: controller.brandPageController,
-                itemCount: null, // Infinite
-                physics: const NeverScrollableScrollPhysics(), // Disable manual scroll for pure auto
-                itemBuilder: (context, index) {
-                  final logoIndex = index % controller.brandLogos.length;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Image.asset(
-                      controller.brandLogos[logoIndex],
-                      fit: BoxFit.contain,
-                    ),
-                  );
-                },
+              child: Align(
+                alignment: Alignment.centerLeft, // 👈 forces left alignment
+                child: PageView.builder(
+                  controller: controller.brandPageController,
+                  itemCount: controller.brandLogos.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padEnds: false, // 👈 IMPORTANT
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Image.asset(
+                        controller.brandLogos[index],
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

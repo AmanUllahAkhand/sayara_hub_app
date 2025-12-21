@@ -1,19 +1,26 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_svgs.dart';
+
+/// --------------------
+/// MODELS
+/// --------------------
 
 class PopularService {
   final String imagePath;
   final String title;
 
-  PopularService({required this.imagePath, required this.title});
+  PopularService({
+    required this.imagePath,
+    required this.title,
+  });
 }
 
 class Garage {
-  final String imagePath; // PNG/JPG
+  final String imagePath;
   final String name;
   final double rating;
   final int reviewCount;
@@ -32,8 +39,12 @@ class Garage {
   });
 }
 
+/// --------------------
+/// CONTROLLER
+/// --------------------
+
 class HomeController extends GetxController {
-  // Auto-scrolling brand logos (PNG from constants)
+  /// Brand Logos (PNG)
   final List<String> brandLogos = [
     AppImages.Subaru,
     AppImages.nissan,
@@ -45,17 +56,22 @@ class HomeController extends GetxController {
     AppImages.honda,
     AppImages.bmw,
     AppImages.mazda,
-    AppImages.toyota,
     AppImages.Daihatsu,
     AppImages.mercedesBenz,
     AppImages.mitsubishi,
     AppImages.audi,
   ];
 
-  final PageController brandPageController = PageController(viewportFraction: 0.25);
-  final currentBrandIndex = 0.obs;
+  /// Page Controller for auto scroll
+  late final PageController brandPageController;
 
-  // Popular Services with PNG icons
+  /// Auto scroll timer
+  Timer? _autoScrollTimer;
+
+  /// Track current index
+  int _currentIndex = 0;
+
+  /// Popular Services
   final List<PopularService> popularServices = [
     PopularService(imagePath: AppSvgs.aCRep, title: 'AC Repair'),
     PopularService(imagePath: AppSvgs.Tires, title: 'Tires'),
@@ -65,7 +81,7 @@ class HomeController extends GetxController {
     PopularService(imagePath: AppSvgs.spares, title: 'Spares'),
   ];
 
-  // Top Rated Garages
+  /// Top Rated Garages
   final List<Garage> topGarages = [
     Garage(
       imagePath: AppImages.alMajidAutoService,
@@ -87,45 +103,73 @@ class HomeController extends GetxController {
     ),
   ];
 
-  Timer? _autoScrollTimer;
+  /// --------------------
+  /// LIFECYCLE
+  /// --------------------
+
   @override
   void onInit() {
     super.onInit();
+
+    brandPageController = PageController(
+      viewportFraction: 0.25, // show multiple logos
+      initialPage: 0,
+    );
+
+    // Start auto scroll after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAutoScroll();
     });
   }
 
+  /// --------------------
+  /// AUTO SCROLL LOGIC
+  /// --------------------
+
   void _startAutoScroll() {
-    // Cancel any existing timer if needed (safe restart)
     _autoScrollTimer?.cancel();
 
-    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
-      if (!brandPageController.hasClients) return;
+    _autoScrollTimer = Timer.periodic(
+      const Duration(seconds: 2),
+          (_) {
+        if (!brandPageController.hasClients) return;
 
-      int nextPage = brandPageController.page?.round() ?? 0;
-      nextPage++; // Always move forward
+        _currentIndex++;
 
-      // Animate to next page (infinite because itemCount is null)
-      brandPageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-      );
-    });
+        if (_currentIndex >= brandLogos.length) {
+          // Jump back instantly to first item
+          _currentIndex = 0;
+          brandPageController.jumpToPage(0);
+        } else {
+          brandPageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOut,
+          );
+        }
+      },
+    );
   }
 
+  /// --------------------
+  /// ACTIONS
+  /// --------------------
+
   void onEmergencyTap() {
-    debugPrint("Emergency Service");
+    debugPrint('Emergency Service tapped');
   }
 
   void onPopularServiceTap(String title) {
-    debugPrint("$title tapped");
+    debugPrint('$title tapped');
   }
 
   void onGarageTap(String name) {
-    debugPrint("$name tapped");
+    debugPrint('$name tapped');
   }
+
+  /// --------------------
+  /// CLEANUP
+  /// --------------------
 
   @override
   void onClose() {
