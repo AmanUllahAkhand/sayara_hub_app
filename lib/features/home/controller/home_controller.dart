@@ -62,14 +62,14 @@ class HomeController extends GetxController {
     AppImages.audi,
   ];
 
-  /// Page Controller for auto scroll
+  /// Page Controller for infinite auto scroll
   late final PageController brandPageController;
 
   /// Auto scroll timer
   Timer? _autoScrollTimer;
 
-  /// Track current index
-  int _currentIndex = 0;
+  /// Current visible page (for tracking if needed)
+  var currentBrandPage = 0.obs;
 
   /// Popular Services
   final List<PopularService> popularServices = [
@@ -111,10 +111,19 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
 
+    // Start in the "middle" of an infinite list to enable seamless looping
+    const int fakeInfiniteOffset = 1000;
     brandPageController = PageController(
-      viewportFraction: 0.25, // show multiple logos
-      initialPage: 0,
+      viewportFraction: 0.25,
+      initialPage: fakeInfiniteOffset,
     );
+
+    // Listen to page changes to update currentBrandPage if needed
+    brandPageController.addListener(() {
+      if (brandPageController.page != null) {
+        currentBrandPage.value = brandPageController.page!.round();
+      }
+    });
 
     // Start auto scroll after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -123,32 +132,32 @@ class HomeController extends GetxController {
   }
 
   /// --------------------
-  /// AUTO SCROLL LOGIC
+  /// AUTO SCROLL LOGIC (Seamless Infinite Loop)
   /// --------------------
 
   void _startAutoScroll() {
     _autoScrollTimer?.cancel();
 
     _autoScrollTimer = Timer.periodic(
-      const Duration(seconds: 2),
+      const Duration(seconds: 2), // Time between each auto-advance
           (_) {
         if (!brandPageController.hasClients) return;
 
-        _currentIndex++;
+        // Always animate to the next page smoothly
+        int nextPage = brandPageController.page!.round() + 1;
 
-        if (_currentIndex >= brandLogos.length) {
-          // Jump back instantly to first item
-          _currentIndex = 0;
-          brandPageController.jumpToPage(0);
-        } else {
-          brandPageController.animateToPage(
-            _currentIndex,
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeInOut,
-          );
-        }
+        brandPageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
       },
     );
+  }
+
+  /// Optional: Get real brand index from infinite page
+  int getRealBrandIndex(int infinitePage) {
+    return infinitePage % brandLogos.length;
   }
 
   /// --------------------

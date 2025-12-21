@@ -147,18 +147,18 @@ class HomeScreen extends GetView<HomeController> {
                 alignment: Alignment.centerLeft, // 👈 forces left alignment
                 child: PageView.builder(
                   controller: controller.brandPageController,
-                  itemCount: controller.brandLogos.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padEnds: false, // 👈 IMPORTANT
                   itemBuilder: (context, index) {
+                    final int brandIndex = index % controller.brandLogos.length;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Image.asset(
-                        controller.brandLogos[index],
+                        controller.brandLogos[brandIndex],
                         fit: BoxFit.contain,
                       ),
                     );
                   },
+                  physics: const NeverScrollableScrollPhysics(),
+                  padEnds: false,
                 ),
               ),
             ),
