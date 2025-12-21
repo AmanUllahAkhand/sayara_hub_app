@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../home/view/home_screen.dart';
 import '../../notifications/binding/notification_binding.dart';
 import '../../notifications/view/notification_screen.dart';
+import '../../profile/binding/profile_binding.dart';
 import '../../profile/view/profile_screen.dart';
 import '../controller/bottom_nav_controller.dart';
 
@@ -20,6 +21,7 @@ class MainTabScreen extends GetView<BottomNavController> {
   @override
   Widget build(BuildContext context) {
     NotificationBinding().dependencies();
+    ProfileBinding().dependencies();
     return Obx(
           () => Scaffold(
         body: IndexedStack(

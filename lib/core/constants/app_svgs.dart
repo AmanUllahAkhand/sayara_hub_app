@@ -4,7 +4,6 @@ class AppSvgs {
   static const String google = 'assets/images/svg/google.svg';
   static const String facebook = 'assets/images/svg/facebook.svg';
   static const String apple = 'assets/images/svg/apple.svg';
-  static const String email = 'assets/images/svg/email.svg';
   static const String password = 'assets/images/svg/cpsw.svg';
 
   //Home Screen:
@@ -21,4 +20,12 @@ class AppSvgs {
   static const String newFeature = 'assets/images/svg/newFeature.svg';
   static const String reminder = 'assets/images/svg/reminder.svg';
   static const String delete = 'assets/images/svg/delete.svg';
+
+  //Profile
+  static const String email = 'assets/images/svg/email.svg';
+  static const String mobile = 'assets/images/svg/mobile.svg';
+  static const String notification = 'assets/images/svg/notification.svg';
+  static const String changePass = 'assets/images/svg/cpsw.svg';
+  static const String signout = 'assets/images/svg/signout.svg';
+  static const String profileImage = 'assets/images/svg/pp.svg';
 }
