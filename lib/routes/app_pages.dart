@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import '../features/auth/binding/auth_binding.dart';
 import '../features/common/view/main_tab_screen.dart';
 import '../features/home/binding/home_binding.dart';
+import '../features/profile/binding/profile_binding.dart';
+import '../features/profile/view/profile_screen.dart';
 import '../features/splash/view/splash_screen.dart';
 import '../features/splash/binding/splash_binding.dart';
 import '../features/auth/view/login_screen.dart';
@@ -25,6 +27,11 @@ class AppPages {
       name: AppRoutes.home,
       page: () => const MainTabScreen(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfileScreen(),
+      binding: ProfileBinding(),
     ),
   ];
 }

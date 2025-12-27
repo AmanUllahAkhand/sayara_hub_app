@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:sayara_hub_app/core/constants/app_colors.dart';
 import 'package:sayara_hub_app/core/widgets/custom_text_view.dart';
 import '../../../core/constants/app_svgs.dart';
+import '../../../routes/app_routes.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -34,14 +35,19 @@ class HomeScreen extends GetView<HomeController> {
         actions: [
           Obx(() {
             final user = controller.user.value; // Firebase user from HomeController
-            return CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.grey.shade200,
-              backgroundImage:
-              user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-              child: user?.photoURL == null
-                  ? const Icon(Icons.person, color: Colors.grey)
-                  : null,
+            return GestureDetector(
+              onTap: () {
+                Get.toNamed(AppRoutes.profile);
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey.shade200,
+                backgroundImage:
+                user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+                child: user?.photoURL == null
+                    ? const Icon(Icons.person, color: Colors.grey)
+                    : null,
+              ),
             );
           }),
           const SizedBox(width: 16),
