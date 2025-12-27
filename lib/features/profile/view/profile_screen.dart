@@ -24,129 +24,148 @@ class ProfileScreen extends GetView<ProfileController> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // Profile Avatar & Name
-            ClipOval(
-              child: SvgPicture.asset(
-                AppSvgs.profileImage,
-                width: 120,  // 2x radius for crisp rendering
-                height: 120,
-                fit: BoxFit.cover, // Ensures the SVG fills the circle properly
-                placeholderBuilder: (context) => Container(
-                  color: Colors.grey.shade200,
-                  child: const CircularProgressIndicator(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomTextView(
-              text: 'Aman Ullah Akhand',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-            const SizedBox(height: 12),
+      body: Obx(() {
+        final user = controller.user.value;
 
-            // Email & Phone
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(AppSvgs.email, width: 15, height: 15, colorFilter: ColorFilter.mode(AppColors.hintText, BlendMode.srcIn)),
-                const SizedBox(width: 5),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // Profile Avatar
+              if (user?.photoURL != null)
+                CircleAvatar(
+                  radius: 60,
+                  backgroundImage: NetworkImage(user!.photoURL!),
+                )
+              else
+                CircleAvatar(
+                  radius: 60,
+                  child: Icon(Icons.person, size: 60),
+                ),
+              const SizedBox(height: 16),
+
+              // Name
+              if (user?.displayName != null)
                 CustomTextView(
-                  text: 'nicolas@email.com',
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
+                  text: user!.displayName!,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
                 ),
-                const SizedBox(width: 15),
-                SvgPicture.asset(AppSvgs.mobile, width: 15, height: 15, colorFilter: ColorFilter.mode(AppColors.hintText, BlendMode.srcIn)),
-                const SizedBox(width: 5),
-                CustomTextView(
-                  text: '+1 (555) 123-4567',
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 40),
+              const SizedBox(height: 12),
 
-            // Settings Section
-            Align(
-              alignment: Alignment.centerLeft,
-              child: CustomTextView(
-                text: 'Settings',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Notifications Toggle
-            _buildSettingItem(
-              icon: AppSvgs.notification,
-              title: 'Notifications',
-              subtitle: 'Enable Push Notification',
-              trailing: Obx(() => Switch(
-                value: controller.pushNotificationEnabled.value,
-                onChanged: controller.togglePushNotification,
-                activeColor: AppColors.primary,
-              )),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Change Password
-            _buildSettingItem(
-              icon: AppSvgs.changePass,
-              title: 'Change Password',
-              subtitle: 'Update your login password for security',
-              trailing: Icon(Icons.chevron_right, color: AppColors.hintText),
-              onTap: controller.onChangePassword,
-            ),
-
-            const SizedBox(height: 40),
-
-            // Sign Out Button
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: controller.signOut,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: BorderSide(color: Colors.red.shade100),
-                  backgroundColor: Colors.red.shade50,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Row(
+              // Email
+              if (user?.email != null)
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      AppSvgs.signout,
-                      width: 20,
-                      height: 20,
-                      colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
-                    ),
-                    const SizedBox(width: 10),
+                    Icon(Icons.email, size: 16, color: AppColors.hintText),
+                    const SizedBox(width: 5),
                     CustomTextView(
-                      text: 'Sign Out',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.red,
+                      text: user!.email!,
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
                     ),
                   ],
                 ),
+
+              // Phone
+              if (user?.phoneNumber != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.phone, size: 16, color: AppColors.hintText),
+                      const SizedBox(width: 5),
+                      CustomTextView(
+                        text: user!.phoneNumber!,
+                        fontSize: 13,
+                        color: AppColors.textSecondary,
+                      ),
+                    ],
+                  ),
+                ),
+
+              const SizedBox(height: 40),
+
+              // Settings section remains unchanged...
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CustomTextView(
+                  text: 'Settings',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+
+              // Notifications Toggle
+              // Notifications Toggle
+              _buildSettingItem(
+                icon: AppSvgs.notification,
+                title: 'Notifications',
+                subtitle: 'Enable Push Notification',
+                trailing: Obx(() => Switch(
+                  value: controller.pushNotificationEnabled.value,
+                  onChanged: controller.togglePushNotification,
+                  activeColor: AppColors.primary,
+                )),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Change Password
+              _buildSettingItem(
+                icon: AppSvgs.changePass,
+                title: 'Change Password',
+                subtitle: 'Update your login password for security',
+                trailing: Icon(Icons.chevron_right, color: AppColors.hintText),
+                onTap: controller.onChangePassword,
+              ),
+
+              const SizedBox(height: 40),
+
+              // Sign Out Button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: controller.signOut,
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: BorderSide(color: Colors.red.shade100),
+                    backgroundColor: Colors.red.shade50,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        AppSvgs.signout,
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
+                      ),
+                      const SizedBox(width: 10),
+                      CustomTextView(
+                        text: 'Sign Out',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
+
 
   Widget _buildSettingItem({
     required String icon,
