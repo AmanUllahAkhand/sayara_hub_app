@@ -32,12 +32,21 @@ class HomeScreen extends GetView<HomeController> {
           ],
         ),
         actions: [
-          CircleAvatar(
-            backgroundColor: Colors.grey.shade200,
-            child: const Icon(Icons.person, color: Colors.grey),
-          ),
+          Obx(() {
+            final user = controller.user.value; // Firebase user from HomeController
+            return CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.grey.shade200,
+              backgroundImage:
+              user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+              child: user?.photoURL == null
+                  ? const Icon(Icons.person, color: Colors.grey)
+                  : null,
+            );
+          }),
           const SizedBox(width: 16),
         ],
+
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

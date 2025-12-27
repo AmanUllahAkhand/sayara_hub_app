@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,6 +45,7 @@ class Garage {
 /// --------------------
 
 class HomeController extends GetxController {
+  final Rx<User?> user = FirebaseAuth.instance.currentUser.obs;
   /// Brand Logos (PNG)
   final List<String> brandLogos = [
     AppImages.Subaru,
@@ -110,7 +112,9 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    FirebaseAuth.instance.authStateChanges().listen((u) {
+      user.value = u;
+    });
     // Start in the "middle" of an infinite list to enable seamless looping
     const int fakeInfiniteOffset = 1000;
     brandPageController = PageController(
