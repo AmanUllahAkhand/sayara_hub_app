@@ -12,7 +12,20 @@
           "package_name": "com.example.sayara_hub_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "132651455240-24j6t6etamrad7p0hp7lo83i0dldf3h3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sayara_hub_app",
+            "certificate_hash": "57d44725adedcbb93e7984a92b1a14fe246cbad4"
+          }
+        },
+        {
+          "client_id": "132651455240-dlq9ef7i4vaho1g95s3j27284gh107lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDtq8rVYx0L620OaIjW9_dIvHu8T4UQMQ4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132651455240-dlq9ef7i4vaho1g95s3j27284gh107lm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "132651455240-ballubvdfo7su1gum1qv5ja4gcfdoqnn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sayaraHubApp"
+              }
+            }
+          ]
         }
       }
     }

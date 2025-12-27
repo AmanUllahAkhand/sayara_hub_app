@@ -1,23 +1,26 @@
-import 'dart:async';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../core/services/firebase_auth_service.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _checkAuthState();
+    _handleNavigation();
   }
 
-  void _checkAuthState() async {
+  Future<void> _handleNavigation() async {
+    // Small delay for splash UX
     await Future.delayed(const Duration(seconds: 2));
 
-    /// Later replace this with Firebase auth check
-    final bool isLoggedIn = false;
+    final User? user = FirebaseAuthService.currentUser;
 
-    if (isLoggedIn) {
+    if (user != null) {
+      // User already logged in
       Get.offAllNamed(AppRoutes.home);
     } else {
+      // User not logged in
       Get.offAllNamed(AppRoutes.login);
     }
   }

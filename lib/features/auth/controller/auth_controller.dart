@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sayara_hub_app/routes/app_routes.dart';
+import '../../../core/services/firebase_auth_service.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController();
@@ -10,12 +11,10 @@ class AuthController extends GetxController {
   final rememberMe = false.obs;
   final isPasswordHidden = true.obs;
 
-  // Email/Phone regex patterns
   final _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
   final _phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
 
   void toggleRememberMe(bool value) => rememberMe.value = value;
-
   void togglePasswordVisibility() => isPasswordHidden.value = !isPasswordHidden.value;
 
   bool _isValidEmailOrPhone(String input) {
@@ -47,7 +46,6 @@ class AuthController extends GetxController {
 
     isLoading.value = true;
 
-    // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
 
     isLoading.value = false;
@@ -57,9 +55,61 @@ class AuthController extends GetxController {
     Get.offAllNamed(AppRoutes.home);
   }
 
-  void loginWithGoogle() {
-    Get.snackbar('Google Sign In', 'Google login initiated', snackPosition: SnackPosition.BOTTOM);
+  /// 🔹 GOOGLE LOGIN
+  void loginWithGoogle() async {
+    isLoading.value = true;
+
+    try {
+      final userCredential = await FirebaseAuthService.signInWithGoogle();
+
+      if (userCredential != null) {
+        final user = userCredential.user;
+
+        // 🔹 FIREBASE USER INFO
+        debugPrint('===== FIREBASE USER =====');
+        debugPrint('UID: ${user?.uid}');
+        debugPrint('Name: ${user?.displayName}');
+        debugPrint('Email: ${user?.email}');
+        debugPrint('Photo URL: ${user?.photoURL}');
+        debugPrint('Phone: ${user?.phoneNumber}');
+        debugPrint('Email Verified: ${user?.emailVerified}');
+        debugPrint('Provider Data: ${user?.providerData.map((e) => e.providerId).toList()}');
+
+        // 🔹 If you want to get ID Token
+        final idToken = await user?.getIdToken();
+        debugPrint('ID Token: $idToken');
+
+        Get.snackbar(
+          'Success',
+          'Logged in as ${user?.displayName}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+
+        Get.offAllNamed(AppRoutes.home);
+      } else {
+        Get.snackbar(
+          'Cancelled',
+          'Google sign-in was cancelled by the user',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange.withOpacity(0.9),
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Google sign-in failed: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.9),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
+
 
   void loginWithFacebook() {
     Get.snackbar('Facebook Sign In', 'Facebook login initiated', snackPosition: SnackPosition.BOTTOM);
@@ -73,9 +123,7 @@ class AuthController extends GetxController {
     Get.snackbar('Forgot Password', 'Reset password flow coming soon', snackPosition: SnackPosition.BOTTOM);
   }
 
-  void goToSignup() {
-
-  }
+  void goToSignup() {}
 
   @override
   void onClose() {
